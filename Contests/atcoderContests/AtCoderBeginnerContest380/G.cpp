@@ -69,11 +69,9 @@ ll res[N] ;
 ll f[N];
 ordered_set st[2] ;
 
-// get the number of integers < x in the ordered set st[i]
 int get_lower(int x , int i) {
     return st[i].order_of_key({x , -(int)2e9}) ;
 }
-// get the number of integers > x in the ordered set st[i]
 int get_greater(int x , int i) {
     return st[i].size() - st[i].order_of_key({x , (int)2e9}) ;
 }
@@ -83,19 +81,14 @@ void solve() {
     cin >> n >> k ;
     int g = inv(2) ;
     for(int i = 1 ; i <= n ; i++) cin >> p[i] ;
-    
-    // prefix sum for the initial contribution in the inversions 
-    // of a number pi with other numbers pj (j < i) 
     for(int i = 1 ; i <= n ; i++) {
         int cur = get_greater(p[i] , 0) ;
         pref[i] = add(pref[i - 1] , cur) ;
         st[0].insert({p[i] , i});
     }
-    
-    // precompute for each subarray of length k [l ,r], the number of inversion such that
-    // pj < l and pi >= l && pj <= r 
     st[0].clear() ;
     for(int i = 1 ; i <= k ; i++) st[1].insert({p[i] , i}) ;
+
     ll cur = 0 ;
     for(int i = k + 1 ; i <= n ; i++) {
         cur = sub(cur , get_greater(p[i - k] , 0)) ;
@@ -108,9 +101,9 @@ void solve() {
         res[i - k + 1] = cur ;
     }
 
-	// compute the total number of inversions after doing the operation
     ll ans = 0;
     for(int i = 1 ; i <= n - k + 1 ; i++) {
+
         ll cnt = pref[i - 1] ;
         cnt = add(cnt , res[i]) ;
         cnt = add(cnt , sub(pref[n] , pref[i + k - 1])) ;
@@ -122,8 +115,6 @@ void solve() {
         cur = add(cur , mult(f[k] , cnt)) ;
         ans = add(ans , cur) ;
     }
-    
-    // Finally, divide the total number of inversions by the number of ways to do the operation 
     cout << mult(ans , inv(mult(f[k], n - k + 1))) << endl;
 }
 
