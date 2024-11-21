@@ -1,1 +1,1 @@
-Here I share my solutions competitive programming problems
+Here I share my solutions for competitive programming problems
